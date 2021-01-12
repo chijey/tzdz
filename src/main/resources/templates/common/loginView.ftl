@@ -11,7 +11,7 @@
 <div class="container login" style="margin-top:100px;">
 	<div class="row clearfix">
 		<div class="col-md-12 column">
-			<div class="col-md-12 column"><h1>卖家后台管理系统</h1></div>
+			<div class="col-md-12 column"><h1>后台管理系统</h1></div>
 			<form class="form-horizontal">
 				<div class="form-group">
 					<label for="inputPhone3" class="col-sm-2 control-label">手机号</label>
