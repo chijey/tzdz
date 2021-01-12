@@ -15,7 +15,6 @@ import java.util.Date;
 @DynamicInsert
 public class Message {
     @Id
-    @GeneratedValue
     private String id;
     private String userId;
     private String objId;
