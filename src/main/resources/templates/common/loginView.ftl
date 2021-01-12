@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>卖家管理系统后台</title>
+	<title>管理系统后台</title>
 	<link rel="stylesheet" href="/sell/css/style.css">
 	<link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
