@@ -1,6 +1,8 @@
 package com.imooc.dataobject;
 
+import com.imooc.VO.PersonVO;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -8,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -32,5 +35,10 @@ public class Person {
     private Date createTime;
     private Date updTime;
     private Integer isAdmin;
+
+    public PersonVO toVO() {
+
+        return null;
+    }
 
 }

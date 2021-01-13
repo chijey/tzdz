@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 @ControllerAdvice
 public class SellExceptionHandler {
 
@@ -18,8 +20,12 @@ public class SellExceptionHandler {
     //http://localhost:8080/sell/seller/category/list
     //http://localhost:8080/sell/wechat/qrAuthorize?returnUrl=http://sell.natapp4.cc/sell/seller/login
     @ExceptionHandler(value = SellerAuthorizeException.class)
-    public ModelAndView handlerAuthorizeException() {
-
+    public ModelAndView handlerAuthorizeException(HttpServletRequest httpServletRequest) {
+        String uri = httpServletRequest.getRequestURI();
+        System.out.println(uri);
+        if(uri.contains("/person/")){
+            return new ModelAndView("/person/loginView");
+        }
 
         //        return new ModelAndView("redirect:"
         //                .concat(projectUrlConfig.getWechatOpenAuthorize())

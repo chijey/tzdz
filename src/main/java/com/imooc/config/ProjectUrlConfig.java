@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Created by wwd
  */
 @Data
-@ConfigurationProperties(prefix = "projectUrl")
+//@ConfigurationProperties(prefix = "projectUrl")
 @Component
 public class ProjectUrlConfig {
 
