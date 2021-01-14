@@ -33,9 +33,5 @@ public class Person {
     private Date updTime;
     private Integer isAdmin;
 
-    public PersonVO toVO() {
-
-        return null;
-    }
 
 }

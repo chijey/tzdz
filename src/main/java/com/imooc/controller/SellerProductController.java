@@ -1,33 +1,34 @@
 package com.imooc.controller;
 
+import com.imooc.VO.PersonVO;
+import com.imooc.VO.ResultVO;
+import com.imooc.dataobject.Person;
 import com.imooc.dataobject.ProductCategory;
 import com.imooc.dataobject.ProductInfo;
 import com.imooc.exception.SellException;
 import com.imooc.form.ProductForm;
+import com.imooc.param.PersonParam;
 import com.imooc.service.CategoryService;
+import com.imooc.service.PersonService;
 import com.imooc.service.ProductService;
+import com.imooc.utils.ConvertUtils;
 import com.imooc.utils.KeyUtil;
+import com.imooc.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 卖家端商品
- * Created by wwd
- */
 @Controller
 @RequestMapping("/seller/product")
 public class SellerProductController {
@@ -37,25 +38,31 @@ public class SellerProductController {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private PersonService personService;
 
-    /**
-     * 列表
-     * @param page
-     * @param size
-     * @param map
-     * @return
-     */
     @GetMapping("/list")
     public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") Integer page,
                              @RequestParam(value = "size", defaultValue = "10") Integer size,
                              Map<String, Object> map) {
         PageRequest request = new PageRequest(page - 1, size);
-        Page<ProductInfo> productInfoPage = productService.findAll(request);
-        map.put("productInfoPage", productInfoPage);
+        Page<Person> personInfoPage = personService.findAll(request);
+        map.put("personInfoPage", personInfoPage);
         map.put("currentPage", page);
         map.put("size", size);
-        return new ModelAndView("product/list", map);
+        return new ModelAndView("person/list", map);
     }
+
+//    @GetMapping("/list")
+//    public ModelAndView pagination(@RequestBody PersonParam param, @RequestParam("page") Integer page, @RequestParam("size") Integer size,
+//                               @RequestParam("sort") String sorts,Map<String, Object> map) {
+//        Pageable pageable = ConvertUtils.pagingConvert(page,size,sorts);
+//        Page<Person> persons = personService.pagination(param, pageable);
+//        map.put("productInfoPage", persons);
+//        map.put("currentPage", page);
+//        map.put("size", size);
+//        return new ModelAndView("person/list", map);
+//    }
 
     /**
      * 商品上架
@@ -70,11 +77,11 @@ public class SellerProductController {
             productService.onSale(productId);
         } catch (SellException e) {
             map.put("msg", e.getMessage());
-            map.put("url", "/sell/seller/product/list");
+            map.put("url", "/sell/seller/person/list");
             return new ModelAndView("common/error", map);
         }
 
-        map.put("url", "/sell/seller/product/list");
+        map.put("url", "/sell/seller/person/list");
         return new ModelAndView("common/success", map);
     }
     /**
@@ -90,11 +97,11 @@ public class SellerProductController {
             productService.offSale(productId);
         } catch (SellException e) {
             map.put("msg", e.getMessage());
-            map.put("url", "/sell/seller/product/list");
+            map.put("url", "/sell/seller/person/list");
             return new ModelAndView("common/error", map);
         }
 
-        map.put("url", "/sell/seller/product/list");
+        map.put("url", "/sell/seller/person/list");
         return new ModelAndView("common/success", map);
     }
 
@@ -110,7 +117,7 @@ public class SellerProductController {
         List<ProductCategory> categoryList = categoryService.findAll();
         map.put("categoryList", categoryList);
 
-        return new ModelAndView("product/index", map);
+        return new ModelAndView("person/index", map);
     }
 
     /**
@@ -126,7 +133,7 @@ public class SellerProductController {
                              Map<String, Object> map) {
         if (bindingResult.hasErrors()) {
             map.put("msg", bindingResult.getFieldError().getDefaultMessage());
-            map.put("url", "/sell/seller/product/index");
+            map.put("url", "/sell/seller/person/index");
             return new ModelAndView("common/error", map);
         }
 
@@ -142,11 +149,11 @@ public class SellerProductController {
             productService.save(productInfo);
         } catch (SellException e) {
             map.put("msg", e.getMessage());
-            map.put("url", "/sell/seller/product/index");
+            map.put("url", "/sell/seller/person/index");
             return new ModelAndView("common/error", map);
         }
 
-        map.put("url", "/sell/seller/product/list");
+        map.put("url", "/sell/seller/person/list");
         return new ModelAndView("common/success", map);
     }
 }

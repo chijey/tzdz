@@ -34,6 +34,11 @@ public class PersonServiceImpl implements PersonService {
         return null;
     }
 
+    @Override
+    public Page<Person> findAll(Pageable pageable) {
+        return personRepository.findAll(pageable);
+    }
+
 //    @Override
 //    public Page<Person> pagination(PersonParam param, Pageable pageable) {
 //        List<Person> persons = new ArrayList<>();

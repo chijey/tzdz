@@ -34,8 +34,8 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th>商品id</th>
-                            <th>商品名称</th>
+                            <th>id</th>
+                            <th>名称</th>
                             <th>价格</th>
                             <th>数量</th>
                             <th>总额</th>

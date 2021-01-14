@@ -37,8 +37,7 @@ public class PersonController {
                                @RequestParam("sort") String sorts) {
         Pageable pageable = ConvertUtils.pagingConvert(page,size,sorts);
         Page<Person> persons = personService.pagination(param, pageable);
-        Page<PersonVO> deviceDtos = persons.map(Person::toVO);
-        return ResultVOUtil.success(deviceDtos);
+        return ResultVOUtil.success(persons);
     }
 
 

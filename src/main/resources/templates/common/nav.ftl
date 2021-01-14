@@ -6,15 +6,15 @@
 			</a>
 		</li>
 		<li>
-			<a href="/sell/seller/order/list"><i class="fa fa-fw fa-list-alt"></i> 订单</a>
+			<a href="/sell/seller/order/list"><i class="fa fa-fw fa-list-alt"></i> 工单</a>
 		</li>
 		<li class="dropdown open">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i
 						class="fa fa-fw fa-plus"></i> 人物 <span class="caret"></span></a>
 			<ul class="dropdown-menu" role="menu">
 				<li class="dropdown-header">操作</li>
-				<li><a href="/sell/seller/product/list">列表</a></li>
-				<li><a href="/sell/seller/product/index">新增</a></li>
+				<li><a href="/sell/seller/person/list">列表</a></li>
+				<li><a href="/sell/seller/person/index">新增</a></li>
 			</ul>
 		</li>
 <#--		<li class="dropdown open">-->
