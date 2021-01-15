@@ -24,15 +24,14 @@ import lombok.extern.slf4j.Slf4j;
  * 用户相关
  */
 @RestController
-@RequestMapping("/user")
+    @RequestMapping("/user")
 @Slf4j
 public class UserController {
 
     @Autowired
     UserRepository repository;
 
-    //创建订单
-    @PostMapping("/save")
+    @PostMapping("/register")
     public ResultVO create(@Valid UserForm userForm,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -48,8 +47,6 @@ public class UserController {
         user.setUsername(userForm.getUsername());
         user.setOpenid(userForm.getOpenid());
         user.setPhone(userForm.getPhone());
-        user.setZhuohao(userForm.getZhuohao());
-        user.setRenshu(userForm.getRenshu());
 
         return ResultVOUtil.success(repository.save(user));
     }

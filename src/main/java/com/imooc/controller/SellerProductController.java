@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/seller/product")
+@RequestMapping("/seller/person")
 public class SellerProductController {
 
     @Autowired

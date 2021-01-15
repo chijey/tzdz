@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -25,8 +26,11 @@ public class PersonController {
 
     @Autowired
     private PersonService personService;
-    @PostMapping("/create")
-    public ResultVO create(@RequestBody Person person) {
+    @PostMapping("/regist")
+    public  ResultVO create(@RequestPart("file") MultipartFile file, @RequestParam("nickName") String nickName,@RequestParam("phone") String phone) {
+        Person person = new Person();
+        person.setPhone(phone);
+        person.setNickName(nickName);
         Person personResult = personService.save(person);
         return ResultVOUtil.success(personResult);
     }
