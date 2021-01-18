@@ -13,6 +13,8 @@ public class UserForm {
     @NotEmpty(message = "手机号必填")
     private String phone;
 
+    @NotEmpty(message = "性别必填")
+    private Integer sex;
 
     private String openid;
 
