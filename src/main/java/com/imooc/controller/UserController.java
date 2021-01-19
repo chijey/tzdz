@@ -200,7 +200,9 @@ public class UserController {
         // 根据返回的user实体类，判断用户是否是新用户，不是的话，更新最新登录时间，是的话，将用户信息存到数据库
         User user = userRepository.findByOpenid(open_id);
         if(user != null){
-            user.setLatestLoginTime(new Date());
+            Date time = new Date();
+            user.setLatestLoginTime(time);
+            user.setCreateTime(time);
             userRepository.save(user);
         }else{
             User insert_user = new User();
@@ -218,6 +220,6 @@ public class UserController {
         // 封装返回小程序
         Map<String, String> result = new HashMap<>();
         result.put("open_id", open_id);
-        return ResultVOUtil.success(result);
+        return ResultVOUtil.success(open_id);
     }
 }
