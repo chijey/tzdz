@@ -1,7 +1,9 @@
 package com.imooc.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.imooc.VO.ResultVO;
 import com.imooc.VO.UserVO;
+import com.imooc.config.UserAppInteface;
 import com.imooc.dataobject.User;
 import com.imooc.dataobject.UserInfo;
 import com.imooc.enums.ResultEnum;
@@ -13,6 +15,7 @@ import com.imooc.param.PersonParam;
 import com.imooc.repository.UserInfoRepository;
 import com.imooc.repository.UserRepository;
 import com.imooc.utils.ConvertUtils;
+import com.imooc.utils.HttpClientUtil;
 import com.imooc.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 用户相关
@@ -38,7 +38,7 @@ import java.util.UUID;
 public class UserController {
 
     @Autowired
-    UserRepository repository;
+    UserRepository userRepository;
 
     @Autowired
     UserInfoRepository userInfoRepository;
@@ -57,7 +57,7 @@ public class UserController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-        User userOld = repository.findByOpenid(userForm.getOpenid());
+        User userOld = userRepository.findByOpenid(userForm.getOpenid());
         User user = new User();
         if (userOld != null) {
             user.setId(userOld.getId());
@@ -67,7 +67,7 @@ public class UserController {
         user.setPhone(userForm.getPhone());
         user.setSex(userForm.getSex());
 
-        return ResultVOUtil.success(repository.save(user));
+        return ResultVOUtil.success(userRepository.save(user));
     }
 
     /**
@@ -77,7 +77,7 @@ public class UserController {
      */
     @GetMapping("/getUserInfo")
     public ResultVO getUserInfo(@RequestParam("openid") String openid) {
-        User user = repository.findByOpenid(openid);
+        User user = userRepository.findByOpenid(openid);
         return ResultVOUtil.success(user);
     }
 
@@ -88,7 +88,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResultVO getUser( @PathVariable String id) {
         UserInfo userInfo = userInfoRepository.findByUserId(id);
-        User user = repository.findById(Integer.valueOf(id));
+        User user = userRepository.findById(Integer.valueOf(id));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
         if(user != null){
@@ -113,7 +113,7 @@ public class UserController {
                     bindingResult.getFieldError().getDefaultMessage());
         }
         User user = new User();
-        return ResultVOUtil.success(repository.save(user));
+        return ResultVOUtil.success(userRepository.save(user));
     }
 
     /**
@@ -176,5 +176,48 @@ public class UserController {
     }
 
 
-
+    @PostMapping("/login")
+    public ResultVO user_login(
+            @RequestParam("code") String code,
+            @RequestParam("userHead") String head,
+            @RequestParam("userName") String username,
+            @RequestParam("userGender") String gender,
+            @RequestParam("userCity") String userCity,
+            @RequestParam("userProvince") String userProvince
+    ){
+        // 配置请求参数
+        Map<String, String> param = new HashMap<>();
+        param.put("appid", UserAppInteface.PROGRAM_ID);
+        param.put("secret", UserAppInteface.PROGRAM_SECRET);
+        param.put("js_code", code);
+        param.put("grant_type", UserAppInteface.WX_LOGIN_GRANT_TYPE);
+        // 发送请求
+        String wxResult = HttpClientUtil.doGet(UserAppInteface.WX_LOGIN_URL, param);
+        JSONObject jsonObject = JSONObject.parseObject(wxResult);
+        // 获取参数返回的
+        String session_key = jsonObject.get("session_key").toString();
+        String open_id = jsonObject.get("openid").toString();
+        // 根据返回的user实体类，判断用户是否是新用户，不是的话，更新最新登录时间，是的话，将用户信息存到数据库
+        User user = userRepository.findByOpenid(open_id);
+        if(user != null){
+            user.setLatestLoginTime(new Date());
+            userRepository.save(user);
+        }else{
+            User insert_user = new User();
+            insert_user.setHead(head);
+            insert_user.setUsername(username);
+            insert_user.setSex(Integer.valueOf(gender));
+            insert_user.setLatestLoginTime(new Date());
+            insert_user.setCity(userCity);
+            insert_user.setProvince(userProvince);
+            insert_user.setOpenid(open_id);
+            System.out.println("insert_user:"+insert_user.toString());
+            // 添加到数据库
+            userRepository.save(insert_user);
+        }
+        // 封装返回小程序
+        Map<String, String> result = new HashMap<>();
+        result.put("open_id", open_id);
+        return ResultVOUtil.success(result);
+    }
 }

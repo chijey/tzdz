@@ -30,7 +30,12 @@ public class User {
     private String zhuohao;//桌号
     private String renshu;//用餐人数
     private Integer sex;
+    private String head;
+
+    private String city;
+    private String province;
 
     private Date createTime;
     private Date updateTime;
+    private Date latestLoginTime;
 }
