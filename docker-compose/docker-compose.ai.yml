@@ -6,7 +6,7 @@ services:
     networks:
       - custom_net
     ports:
-      - "8081:8080"
+      - "8080:8080"
     restart: always
     entrypoint: "java -jar -Xms256m -Xmx512m /app.jar"
 
