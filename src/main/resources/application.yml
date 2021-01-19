@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /sell
-  port: 80
+  port: 8080
 spring:
   datasource:
     #    driver-class-name: com.mysql.jdbc.Driver
