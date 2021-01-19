@@ -85,10 +85,10 @@ public class UserController {
      *
      * @return
      */
-    @GetMapping("/getUser")
-    public ResultVO getUser( @RequestParam String userId) {
-        UserInfo userInfo = userInfoRepository.findByUserId(userId.toString());
-        User user = repository.findById(Integer.valueOf(userId));
+    @GetMapping("/{id}")
+    public ResultVO getUser( @PathVariable String id) {
+        UserInfo userInfo = userInfoRepository.findByUserId(id);
+        User user = repository.findById(Integer.valueOf(id));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
         if(user != null){

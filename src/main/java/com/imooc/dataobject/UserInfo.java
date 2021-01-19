@@ -22,7 +22,7 @@ public class UserInfo {
 
     @Id
     private String id;
-    private Integer userId;
+    private String userId;
     private String name;
     private String nickName;
     private BigDecimal height;
