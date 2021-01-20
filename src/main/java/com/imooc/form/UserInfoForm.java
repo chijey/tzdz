@@ -22,4 +22,6 @@ public class UserInfoForm {
     private String skill;
     private Integer isAdmin;
 
+    private String openId;
+
 }

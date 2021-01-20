@@ -145,7 +145,7 @@ public class UserController {
     @PostMapping("/info")
     public ResultVO data(@Valid UserInfoForm userInfoForm,
                          BindingResult bindingResult) {
-        UserInfo userInfo = new UserInfo();
+        UserInfo userInfo = userInfoRepository.findByOpenId(userInfoForm.getOpenId());
         BeanUtils.copyProperties(userInfoForm, userInfo);
         Date time = new Date();
         userInfo.setId(UUID.randomUUID().toString());
