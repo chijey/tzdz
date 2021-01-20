@@ -217,7 +217,6 @@ public class UserController {
             insert_user.setProvince(userProvince);
             insert_user.setOpenid(open_id);
             user.setLatestLoginTime(new Date());
-            System.out.println("insert_user:"+insert_user.toString());
             // 添加到数据库
             userRepository.save(insert_user);
         }
