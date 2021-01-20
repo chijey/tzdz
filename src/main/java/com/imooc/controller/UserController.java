@@ -14,10 +14,7 @@ import com.imooc.form.VerifyForm;
 import com.imooc.param.PersonParam;
 import com.imooc.repository.UserInfoRepository;
 import com.imooc.repository.UserRepository;
-import com.imooc.utils.ConvertUtils;
-import com.imooc.utils.HttpClientUtil;
-import com.imooc.utils.IdCardVerify;
-import com.imooc.utils.ResultVOUtil;
+import com.imooc.utils.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -86,10 +83,10 @@ public class UserController {
      *
      * @return
      */
-    @GetMapping("/{id}")
-    public ResultVO getUser( @PathVariable String id) {
-        UserInfo userInfo = userInfoRepository.findByUserId(id);
-        User user = userRepository.findById(Integer.valueOf(id));
+    @GetMapping("/{openId}")
+    public ResultVO getUser( @PathVariable String openId) {
+        UserInfo userInfo = userInfoRepository.findByOpenId(openId);
+        User user = userRepository.findById(Integer.valueOf(openId));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
         if(user != null){
@@ -114,7 +111,7 @@ public class UserController {
                     bindingResult.getFieldError().getDefaultMessage());
         }
         IdCardVerify.IdentityCardVerification(userForm.getIdCard());
-        UserInfo userInfo = userInfoRepository.findByUserId(userForm.getOpenId());
+        UserInfo userInfo = userInfoRepository.findByOpenId(userForm.getOpenId());
         userInfo.setIdCard(userForm.getIdCard());
         userInfo.setRealName(userForm.getRealName());
         userInfo.setIsRealNameValid(1);
@@ -145,24 +142,37 @@ public class UserController {
     @PostMapping("/info")
     public ResultVO data(@Valid UserInfoForm userInfoForm,
                          BindingResult bindingResult) {
+        User user = userRepository.findByOpenid(userInfoForm.getOpenId());
+        if(user == null){
+            throw new SellException(ResultEnum.USER_NOT_EXIST);
+        }
         UserInfo userInfo = userInfoRepository.findByOpenId(userInfoForm.getOpenId());
-        BeanUtils.copyProperties(userInfoForm, userInfo);
-        Date time = new Date();
-        userInfo.setId(UUID.randomUUID().toString());
-        userInfo.setUpdTime(time);
-        userInfo.setUpdTime(time);
+        if(userInfo == null){
+
+            userInfo = new UserInfo();
+            userInfo.setId(UUID.randomUUID().toString());
+            BeanUtils.copyProperties(userInfoForm, userInfo);
+            userInfo.setBirthDate(DateUtils.parseDate(userInfoForm.getBirthDate(),"yyyy-MM-dd"));
+            Date time = new Date();
+            userInfo.setCreateTime(time);
+            userInfo.setUpdTime(time);
+        }else{
+            BeanUtils.copyProperties(userInfoForm, userInfo);
+            Date time = new Date();
+            userInfo.setUpdTime(time);
+        }
+
         return ResultVOUtil.success(userInfoRepository.save(userInfo));
     }
 
     /**
      * 上传生活照片
      * @param files
-     * @param userId
      * @return
      * @throws IOException
      */
     @PostMapping("/life/pictures")
-    public ResultVO pictures(@RequestPart MultipartFile [] files,@RequestParam("userId") String userId) throws IOException {
+    public ResultVO pictures(@RequestPart MultipartFile [] files,@RequestParam("openId") String openId) throws IOException {
         List<String> picturesPath = new ArrayList<>();
         for(MultipartFile file:files){
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
@@ -175,7 +185,7 @@ public class UserController {
             file.transferTo(destFile);
             picturesPath.add(fileName);
         }
-        UserInfo userInfo = userInfoRepository.findByUserId(userId);
+        UserInfo userInfo = userInfoRepository.findByOpenId(openId);
         userInfo.setLifePhotos(picturesPath.toString());
         return ResultVOUtil.success(userInfoRepository.save(userInfo));
     }

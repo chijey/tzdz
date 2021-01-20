@@ -47,6 +47,8 @@ public enum ResultEnum {
     LOGOUT_SUCCESS(26, "登出成功"),
 
     ID_CARD_ERROR(30,"证件错误"),
+
+    USER_NOT_EXIST(30,"用户不存在"),
     ;
 
     private Integer code;
