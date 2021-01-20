@@ -27,8 +27,6 @@ public class User {
     private String username;
     private String phone;
     private String openid;
-    private String zhuohao;//桌号
-    private String renshu;//用餐人数
     private Integer sex;
     private String head;
 
