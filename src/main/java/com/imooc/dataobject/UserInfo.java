@@ -38,5 +38,11 @@ public class UserInfo {
     private Date createTime;
     private Date updTime;
     private Integer isAdmin;
+    private String openId;
+
+    private String realName;
+    private String idCard;
+    private Integer isRealNameValid;
+
 
 }

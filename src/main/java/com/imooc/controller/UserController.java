@@ -16,6 +16,7 @@ import com.imooc.repository.UserInfoRepository;
 import com.imooc.repository.UserRepository;
 import com.imooc.utils.ConvertUtils;
 import com.imooc.utils.HttpClientUtil;
+import com.imooc.utils.IdCardVerify;
 import com.imooc.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,8 +113,12 @@ public class UserController {
             throw new SellException(ResultEnum.PARAM_ERROR.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
         }
-        User user = new User();
-        return ResultVOUtil.success(userRepository.save(user));
+        IdCardVerify.IdentityCardVerification(userForm.getIdCard());
+        UserInfo userInfo = userInfoRepository.findByUserId(userForm.getOpenId());
+        userInfo.setIdCard(userForm.getIdCard());
+        userInfo.setRealName(userForm.getRealName());
+        userInfo.setIsRealNameValid(1);
+        return ResultVOUtil.success( userInfoRepository.save(userInfo));
     }
 
     /**
@@ -179,7 +184,7 @@ public class UserController {
     @PostMapping("/login")
     public ResultVO user_login(
             @RequestParam("code") String code,
-            @RequestParam("userHead") String head,
+//            @RequestParam("userHead") String head,
             @RequestParam("userName") String username,
             @RequestParam("userGender") String gender,
             @RequestParam("userCity") String userCity,
@@ -205,7 +210,6 @@ public class UserController {
             userRepository.save(user);
         }else{
             User insert_user = new User();
-            insert_user.setHead(head);
             insert_user.setUsername(username);
             insert_user.setSex(Integer.valueOf(gender));
             insert_user.setLatestLoginTime(new Date());

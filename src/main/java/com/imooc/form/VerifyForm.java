@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class VerifyForm {
     private String idCard;
     private String realName;
+    private String openId;
 
 
 
