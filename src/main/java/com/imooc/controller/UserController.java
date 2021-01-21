@@ -14,9 +14,11 @@ import com.imooc.form.VerifyForm;
 import com.imooc.param.PersonParam;
 import com.imooc.repository.UserInfoRepository;
 import com.imooc.repository.UserRepository;
+import com.imooc.service.UserService;
 import com.imooc.utils.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
     @Autowired
     UserInfoRepository userInfoRepository;
 
@@ -129,7 +133,9 @@ public class UserController {
     public ResultVO pagination(@RequestBody PersonParam param, @RequestParam("page") Integer page, @RequestParam("size") Integer size,
                                @RequestParam("sort") String sorts) {
         Pageable pageable = ConvertUtils.pagingConvert(page,size,sorts);
-        return ResultVOUtil.success(null);
+
+        Page<UserInfo> userspage = userService.pageination(param,pageable);
+        return ResultVOUtil.success(userspage);
     }
 
     /**
