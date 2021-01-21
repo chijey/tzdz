@@ -3,6 +3,7 @@ package com.imooc.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.imooc.VO.ResultVO;
 import com.imooc.VO.UserVO;
+import com.imooc.config.JwtSecurityProperties;
 import com.imooc.config.UserAppInteface;
 import com.imooc.dataobject.User;
 import com.imooc.dataobject.UserInfo;
@@ -16,6 +17,7 @@ import com.imooc.repository.UserInfoRepository;
 import com.imooc.repository.UserRepository;
 import com.imooc.service.UserService;
 import com.imooc.utils.*;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,12 +40,15 @@ import java.util.*;
 public class UserController {
 
     @Autowired
+    private JwtSecurityProperties jwtSecurityProperties;
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
     private UserService userService;
     @Autowired
     UserInfoRepository userInfoRepository;
+    private JwtTokenUtils jwtTokenUtils;
 
     /**
      * 用户注册
@@ -224,20 +229,27 @@ public class UserController {
             user.setLatestLoginTime(time);
             userRepository.save(user);
         }else{
-            User insert_user = new User();
-            insert_user.setUsername(username);
-            insert_user.setSex(Integer.valueOf(gender));
-            insert_user.setLatestLoginTime(new Date());
-            insert_user.setCity(userCity);
-            insert_user.setProvince(userProvince);
-            insert_user.setOpenid(open_id);
+            user = new User();
+            user.setUsername(username);
+            user.setSex(Integer.valueOf(gender));
+            user.setLatestLoginTime(new Date());
+            user.setCity(userCity);
+            user.setProvince(userProvince);
+            user.setOpenid(open_id);
             user.setLatestLoginTime(new Date());
             // 添加到数据库
-            userRepository.save(insert_user);
+            userRepository.save(user);
         }
         // 封装返回小程序
         Map<String, String> result = new HashMap<>();
         result.put("open_id", open_id);
-        return ResultVOUtil.success(open_id);
+        //创建token
+        Map<String, Object> claims = new HashMap<>(16);
+        claims.put("roles", "user");
+        String token = jwtTokenUtils.createToken(open_id, claims);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user,userVO);
+        userVO.setToken(jwtSecurityProperties.getTokenStartWith() + token);
+        return ResultVOUtil.success(userVO);
     }
 }

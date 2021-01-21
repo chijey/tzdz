@@ -12,4 +12,5 @@ public class UserVO {
     private Integer sex;
     private String openid;
     private VerifyForm verifyForm;
+    private String token;
 }
