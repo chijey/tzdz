@@ -48,6 +48,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     UserInfoRepository userInfoRepository;
+    @Autowired
     private JwtTokenUtils jwtTokenUtils;
 
     /**

@@ -28,24 +28,6 @@ public class SellerOrderController {
     @Autowired
     private OrderService orderService;
 
-    /**
-     * 订单列表
-     * @param page 第几页, 从1页开始
-     * @param size 一页有多少条数据
-     * @return
-     */
-    @GetMapping("/list")
-    public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                             @RequestParam(value = "size", defaultValue = "10") Integer size,
-                             Map<String, Object> map) {
-        PageRequest request = new PageRequest(page - 1, size);
-        Page<OrderDTO> orderDTOPage = orderService.findList(request);
-        map.put("orderDTOPage", orderDTOPage);
-        map.put("currentPage", page);
-        map.put("size", size);
-//        orderDTOPage.getTotalPages()
-        return new ModelAndView("order/list", map);
-    }
 
     /**
      * 取消订单

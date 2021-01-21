@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   datasource:
-    #    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: thingsmatrix@8
     url: jdbc:mysql://120.79.187.66/sell?characterEncoding=utf-8&useSSL=false&serverTimeZone=UTC&useOldAliasMetadataBehavior=true
@@ -31,3 +31,8 @@ jwt:
   online-key: online-token
   # 验证码
   code-key: code-key
+
+uploadFile:
+  path: D:/tzdz/file/
+  # 文件大小 /M
+  maxSize: 50

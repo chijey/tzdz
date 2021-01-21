@@ -41,17 +41,6 @@ public class SellerProductController {
     @Autowired
     private PersonService personService;
 
-    @GetMapping("/list")
-    public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                             @RequestParam(value = "size", defaultValue = "10") Integer size,
-                             Map<String, Object> map) {
-        PageRequest request = new PageRequest(page - 1, size);
-        Page<Person> personInfoPage = personService.findAll(request);
-        map.put("personInfoPage", personInfoPage);
-        map.put("currentPage", page);
-        map.put("size", size);
-        return new ModelAndView("person/list", map);
-    }
 
 //    @GetMapping("/list")
 //    public ModelAndView pagination(@RequestBody PersonParam param, @RequestParam("page") Integer page, @RequestParam("size") Integer size,
