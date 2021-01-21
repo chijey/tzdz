@@ -83,16 +83,15 @@ public class UserController {
      *
      * @return
      */
-    @GetMapping("/{openId}")
-    public ResultVO getUser( @PathVariable String openId) {
+    @GetMapping("/getUser")
+    public ResultVO getUser( @RequestParam String openId) {
         UserInfo userInfo = userInfoRepository.findByOpenId(openId);
-        User user = userRepository.findById(Integer.valueOf(openId));
+        User user = userRepository.findByOpenid(openId);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user,userVO);
         if(user != null){
             userVO.setUserInfo(userInfo);
         }
-
         return ResultVOUtil.success(userVO);
     }
 
